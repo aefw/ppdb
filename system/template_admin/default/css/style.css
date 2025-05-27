@@ -1,0 +1,127 @@
+/*
+ * BEGIN dark mode
+ * dark mode is all content css chage to light
+ */
+html.uk-light,
+body.uk-light,
+.uk-light .tm-main.uk-section-default,
+.uk-light .ui-state-default,
+.uk-light .ui-widget-content .ui-state-default,
+.uk-light .ui-widget-header .ui-state-default,
+.uk-light .ui-button,
+html.uk-light .ui-button.ui-state-disabled:hover,
+html.uk-light .ui-button.ui-state-disabled:active,
+.uk-light .tm-navbar-container:not(.uk-navbar-transparent) { background: #222; }
+.uk-light .tm-navbar-container:not(.uk-navbar-transparent) { border-bottom: 1px rgba(255,255,255,0.2) solid; }
+.uk-light .tm-sidebar-left { border-right: 1px rgba(255,255,255,0.2) solid; }
+.uk-light .ui-widget-header { background: #222; border: 1px solid rgba(255,255,255,0.2); }
+
+.uk-light .uk-tab>.uk-active>a,
+.uk-section-primary:not(.uk-preserve-color) .uk-tab>.uk-active>a,
+.uk-section-secondary:not(.uk-preserve-color) .uk-tab>.uk-active>a,
+.uk-tile-primary:not(.uk-preserve-color) .uk-tab>.uk-active>a,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-tab>.uk-active>a,
+.uk-card-primary.uk-card-body .uk-tab>.uk-active>a,
+.uk-card-primary>:not([class*='uk-card-media']) .uk-tab>.uk-active>a,
+.uk-card-secondary.uk-card-body .uk-tab>.uk-active>a,
+.uk-card-secondary>:not([class*='uk-card-media']) .uk-tab>.uk-active>a,
+.uk-overlay-primary .uk-tab>.uk-active>a,
+.tm-navbar-container:not(.uk-navbar-transparent) .uk-tab>.uk-active>a { color: #666; } /* follow as color at theme.css */
+
+.uk-light table.dataTable tbody tr { background: rgba(255,255,255,0.08); }
+/*
+ * END dark mode
+ */
+
+:root {
+	--uk-alert-sticky-on-cke: 981;
+	--uk-notification-on-cke: 9996; /* .cke_maximized is use z-index 9995 */
+	--uk-notification-on-cke: 99995; /* .uk-modal is use z-index 99994 */
+}
+.uk-alert.uk-sticky-fixed { z-index: var(--uk-alert-sticky-on-cke); }
+.uk-notification { z-index: var(--uk-notification-on-cke); }
+.cke_maximized {
+}
+
+.uk-tab-left>*>a { border-right: 5px solid transparent; }
+.uk-tab>.uk-active>a { font-weight: 600; background: #f8f8f8; }
+table.dataTable thead th div.DataTables_sort_wrapper span.uk-icon { position: unset; }
+
+.tm-form-login .tm-logo .tm-logo-img { max-height: 165px; }
+
+.uk-navbar .tm-logo .tm-logo-img { max-height: 50px; }
+.uk-navbar .uk-button .tm-user-picture {
+	max-height: 40px;
+	margin-right: -30px;
+	background: rgba(255,255,255,0.6);
+}
+.uk-navbar .uk-button:hover .tm-user-picture {
+	background: rgba(255,255,255,1);
+}
+
+.tm-navbar-container .uk-navbar-nav > li .uk-nav > li > a::before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 15px;
+    right: calc(102% - 15px);
+    bottom: 20px;
+    height: 1px;
+    background-color: currentColor;
+    transition: .3s ease-in-out;
+    transition-property: right;
+}
+.tm-navbar-container .uk-navbar-nav > li .uk-nav > li > a:hover::before {
+    right: 15px;
+}
+
+.tm-sidebar-left { padding: 20px 20px 30px 20px; }
+.tm-sidebar-left .uk-accordion-title { font-size: 16px; }
+.tm-sidebar-left .uk-accordion-content { margin-top: 0px;}
+.tm-sidebar-left { width: 250px !important; }
+.tm-sidebar-left + .tm-main { padding-left: 250px; }
+.tm-sidebar-left::-webkit-scrollbar {
+    width: 8px;
+	height: 8px;
+}
+.tm-sidebar-left::-webkit-scrollbar-track {
+    background-color: rgb(228 228 226 / 30%);
+    border-radius: 100px;
+}
+.tm-sidebar-left::-webkit-scrollbar-thumb {
+    background-color: rgb(255 255 255 / 70%);
+    border-radius: 100px;
+}
+.tm-main.uk-section {
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+.tm-main .uk-section {
+	padding-top: 40px;
+	padding-bottom: 40px;
+}
+.tm-main .uk-container {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+.tm-main > .uk-container {
+	max-width: 3000px;
+}
+footer.tm-navbar-container {
+	padding: 4px;
+}
+.uk-offcanvas-bar { background: #222; }
+.uk-breadcrumb > :nth-child(n+2):not(.uk-first-column)::before { margin: 0 8px; }
+.uk-subnav-pill:not(.uk-tab) > .uk-active > a { color: #fff; }
+.uk-card-badge [class*=uk-inline] { position: unset; }
+
+@media (max-width: 959px) {
+	.uk-navbar .tm-logo .tm-logo-img { max-height: 32px; }
+	.tm-sidebar-left + .tm-main { padding-left: 0px; }
+}
+@media (min-width: 960px) {
+	.uk-form-stacked > * > .uk-form-label { float: none; }
+	.uk-form-stacked > * > .uk-form-controls { margin-left: 0px; }
+}
+
+[class*="notification-"] { text-transform: capitalize; }

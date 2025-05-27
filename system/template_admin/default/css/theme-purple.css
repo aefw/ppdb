@@ -1,0 +1,36 @@
+a,.uk-link{color:#564aeb}
+a.uk-link-heading:hover,.uk-link-heading a:hover,.uk-link-toggle:hover .uk-link-heading,.uk-link-toggle:focus .uk-link-heading{color:#564aeb}
+.uk-input:focus,.uk-select:focus,.uk-textarea:focus{border-color:#564aeb}
+.uk-radio:focus,.uk-checkbox:focus{border-color:#564aeb}
+.uk-radio:checked,.uk-checkbox:checked,.uk-checkbox:indeterminate{background-color:#564aeb}
+.uk-button-primary{background-color:#564aeb}
+.uk-button-link{color:#564aeb}
+.uk-section-primary{background:#564aeb}
+.uk-tile-primary{background:#564aeb}
+.uk-card-primary{background:#564aeb}
+.uk-card-primary.uk-card-hover:hover{background-color:#564aeb}
+.uk-alert-primary{color:#564aeb}
+.uk-badge{background:#564aeb}
+.uk-label{background:#564aeb}
+.uk-subnav-pill>.uk-active>a{background-color:#564aeb}
+.uk-tab>.uk-active>a{border-color:#564aeb}
+.uk-notification-message-primary{color:#564aeb}
+.uk-progress::-webkit-progress-value{background-color:#564aeb}
+.uk-progress::-moz-progress-bar{background-color:#564aeb}
+.uk-progress::-ms-fill{background-color:#564aeb}
+.uk-text-primary{color:#564aeb !important}
+.uk-text-background{color:#564aeb !important}
+@supports (-webkit-background-clip: text){.uk-text-background{background-color:#564aeb}}
+.uk-background-primary{background-color:#564aeb}
+.uk-light .tm-button-primary,.uk-section-primary:not(.uk-preserve-color) .tm-button-primary,.uk-section-secondary:not(.uk-preserve-color) .tm-button-primary,.uk-tile-primary:not(.uk-preserve-color) .tm-button-primary,.uk-tile-secondary:not(.uk-preserve-color) .tm-button-primary,.uk-card-primary.uk-card-body .tm-button-primary,.uk-card-primary>:not([class*='uk-card-media']) .tm-button-primary,.uk-card-secondary.uk-card-body .tm-button-primary,.uk-card-secondary>:not([class*='uk-card-media']) .tm-button-primary,.uk-overlay-primary .tm-button-primary,.tm-navbar-container:not(.uk-navbar-transparent) .tm-button-primary{color:#564aeb !important}
+.uk-light .tm-button-primary,.uk-section-primary:not(.uk-preserve-color) .tm-button-primary,.uk-section-secondary:not(.uk-preserve-color) .tm-button-primary,.uk-tile-primary:not(.uk-preserve-color) .tm-button-primary,.uk-tile-secondary:not(.uk-preserve-color) .tm-button-primary,.uk-card-primary.uk-card-body .tm-button-primary,.uk-card-primary>:not([class*='uk-card-media']) .tm-button-primary,.uk-card-secondary.uk-card-body .tm-button-primary,.uk-card-secondary>:not([class*='uk-card-media']) .tm-button-primary,.uk-overlay-primary .tm-button-primary,.tm-navbar-container:not(.uk-navbar-transparent) .tm-button-primary{background:#fff !important;color:#564aeb !important}.uk-light .tm-button-primary:hover,.uk-section-primary:not(.uk-preserve-color) .tm-button-primary:hover,.uk-section-secondary:not(.uk-preserve-color) .tm-button-primary:hover,.uk-tile-primary:not(.uk-preserve-color) .tm-button-primary:hover,.uk-tile-secondary:not(.uk-preserve-color) .tm-button-primary:hover,.uk-card-primary.uk-card-body .tm-button-primary:hover,.uk-card-primary>:not([class*='uk-card-media']) .tm-button-primary:hover,.uk-card-secondary.uk-card-body .tm-button-primary:hover,.uk-card-secondary>:not([class*='uk-card-media']) .tm-button-primary:hover,.uk-overlay-primary .tm-button-primary:hover,.tm-navbar-container:not(.uk-navbar-transparent) .tm-button-primary:hover{box-shadow:0 10px 40px #564aeb}
+.tm-navbar-container:not(.uk-navbar-transparent){background:linear-gradient(to left, #7e74f7, #564aeb)}
+.tm-navbar-container .uk-navbar-dropdown{background: linear-gradient(to left, #7e74f7, #564aeb)}
+.tm-nav>li.uk-active>a:before{border-top:1px solid #564aeb}
+.tm-section-primary{background:linear-gradient(to left top, #7e74f7, #564aeb) 0 0 no-repeat}
+.tm-section-texture{background:url("../images/section-background.svg") 50% 17vh no-repeat,linear-gradient(to left top, #7e74f7, #564aeb) 0 0 no-repeat}
+.tm-section-intro{background:linear-gradient(to left top, #7e74f7, #564aeb) 0 0 no-repeat,#fff}
+
+.uk-button-primary:hover,.uk-button-primary:focus{background-color:#7e74f7;}
+
+.uk-card .uk-card-header .uk-card-badge a { color: #fff; }
