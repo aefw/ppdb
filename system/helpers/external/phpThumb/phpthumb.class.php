@@ -265,7 +265,7 @@ class phpthumb {
 	public $issafemode       = null;
 	public $php_memory_limit = null;
 
-	public $phpthumb_version = '1.7.22-202408102120';
+	public $phpthumb_version = '1.7.23-202506081709';
 
 	//////////////////////////////////////////////////////////////////////
 
@@ -3543,7 +3543,7 @@ if (false) {
 		$this->SetOrientationDependantWidthHeight();
 
 		if (phpthumb_functions::version_compare_replacement(PHP_VERSION, '4.2.0', '>=') && function_exists('exif_read_data')) {
-			if(isset($this->getimagesizeinfo[2])) switch (@$this->getimagesizeinfo[2]) {
+			if( $this->getimagesizeinfo != null && $this->getimagesizeinfo[2] != null ) switch (@$this->getimagesizeinfo[2]) {
 				case IMAGETYPE_JPEG:
 				case IMAGETYPE_TIFF_II:
 				case IMAGETYPE_TIFF_MM:
@@ -3551,7 +3551,7 @@ if (false) {
 					break;
 			}
 		}
-		if (isset($this->getimagesizeinfo[2]) && function_exists('exif_thumbnail') && (@$this->getimagesizeinfo[2] == IMAGETYPE_JPEG)) {
+		if( $this->getimagesizeinfo != null && $this->getimagesizeinfo[2] != null && function_exists('exif_thumbnail') && (@$this->getimagesizeinfo[2] == IMAGETYPE_JPEG)) {
 			// Extract EXIF info from JPEGs
 
 			$this->exif_thumbnail_width  = '';
@@ -3898,11 +3898,11 @@ if (false) {
 			$this->gdimg_source = $this->ImageCreateFromStringReplacement($this->rawImageData);
 			if (!$this->gdimg_source) {
 				if (substr($this->rawImageData, 0, 2) === 'BM') {
-					$this->getimagesizeinfo[2] = 6; // BMP
+					$this->getimagesizeinfo[2] = IMAGETYPE_BMP; // BMP
 				} elseif (substr($this->rawImageData, 0, 4) === 'II'."\x2A\x00") {
-					$this->getimagesizeinfo[2] = 7; // TIFF (littlendian)
+					$this->getimagesizeinfo[2] = IMAGETYPE_TIFF_II; // TIFF (littlendian)
 				} elseif (substr($this->rawImageData, 0, 4) === 'MM'."\x00\x2A") {
-					$this->getimagesizeinfo[2] = 8; // TIFF (bigendian)
+					$this->getimagesizeinfo[2] = IMAGETYPE_TIFF_MM; // TIFF (bigendian)
 				}
 				$this->DebugMessage('SourceImageToGD.ImageCreateFromStringReplacement() failed with unknown image type "'.substr($this->rawImageData, 0, 4).'" ('.phpthumb_functions::HexCharDisplay(substr($this->rawImageData, 0, 4)).')', __FILE__, __LINE__);
 //				return $this->ErrorImage('Unknown image type identified by "'.substr($this->rawImageData, 0, 4).'" ('.phpthumb_functions::HexCharDisplay(substr($this->rawImageData, 0, 4)).') in SourceImageToGD()['.__LINE__.']');
@@ -3914,9 +3914,10 @@ if (false) {
 				return $this->ErrorImage('$this->md5s != md5(sourceFilename)'."\n".'"'.$this->md5s.'" != '."\n".'"'.phpthumb_functions::md5_file_safe($this->sourceFilename).'"');
 			}
 			switch (@$this->getimagesizeinfo[2]) {
-				case 1:
-				case 3:
-					// GIF or PNG input file may have transparency
+				case IMAGETYPE_GIF:
+				case IMAGETYPE_PNG:
+				case IMAGETYPE_WEBP:
+					// GIF, PNG of WEBP input file may have transparency
 					$this->is_alpha = true;
 					break;
 			}
@@ -3992,18 +3993,23 @@ if (false) {
 			$gd_info = gd_info();
 			$GDreadSupport = false;
 			switch (@$this->getimagesizeinfo[2]) {
-				case 1:
+				case IMAGETYPE_GIF:
 					$imageHeader = 'Content-Type: image/gif';
 					$GDreadSupport = (bool) @$gd_info['GIF Read Support'];
 					break;
-				case 2:
+				case IMAGETYPE_JPEG:
 					$imageHeader = 'Content-Type: image/jpeg';
 					$GDreadSupport = (bool) @$gd_info['JPG Support'];
 					break;
-				case 3:
+				case IMAGETYPE_PNG:
 					$imageHeader = 'Content-Type: image/png';
 					$GDreadSupport = (bool) @$gd_info['PNG Support'];
 					break;
+				case IMAGETYPE_WEBP:
+					$imageHeader = 'Content-Type: image/webp';
+					$GDreadSupport = (bool) @$gd_info['WebP Support '];
+					break;
+
 			}
 			if ($imageHeader) {
 				// cannot create image for whatever reason (maybe imagecreatefromjpeg et al are not available?)
@@ -4044,7 +4050,7 @@ if (false) {
 			//switch (substr($this->rawImageData, 0, 2)) {
 			//	case 'BM':
 			switch (@$this->getimagesizeinfo[2]) {
-				case 6:
+				case IMAGETYPE_BMP:
 					ob_start();
 					if (!@include_once __DIR__ .'/phpthumb.bmp.php' ) {
 						ob_end_clean();
@@ -4071,8 +4077,8 @@ if (false) {
 			//switch (substr($this->rawImageData, 0, 4)) {
 			//	case 'II'."\x2A\x00":
 			//	case 'MM'."\x00\x2A":
-				case 7:
-				case 8:
+				case IMAGETYPE_TIFF_II:
+				case IMAGETYPE_TIFF_MM:
 					return $this->ErrorImage($this->ImageMagickVersion() ? 'ImageMagick failed on TIFF source conversion' : 'ImageMagick is unavailable and phpThumb() does not support TIFF source images without it');
 					break;
 
@@ -4212,10 +4218,10 @@ if (false) {
 		$DebugOutput[] = '__FILE__                    = '.__FILE__;
 		$DebugOutput[] = 'realpath(.)                 = '.@realpath('.');
 		$DebugOutput[] = '$_SERVER[PHP_SELF]          = '.@$_SERVER['PHP_SELF'];
-		$DebugOutput[] = '$_SERVER[HOST_NAME]         = '.((isset($_SERVER['HOST_NAME'])) ? @$_SERVER['HOST_NAME'] : '');
+		$DebugOutput[] = '$_SERVER[HOST_NAME]         = '.((isset($_SERVER['HOST_NAME'])) ? @$_SERVER['HOST_NAME'] : $_SERVER['SERVER_NAME'] );
 		$DebugOutput[] = '$_SERVER[HTTP_REFERER]      = '.@$_SERVER['HTTP_REFERER'];
 		$DebugOutput[] = '$_SERVER[QUERY_STRING]      = '.@$_SERVER['QUERY_STRING'];
-		$DebugOutput[] = '$_SERVER[PATH_INFO]         = '.((isset($_SERVER['PATH_INFO'])) ? @$_SERVER['PATH_INFO'] : '');
+		$DebugOutput[] = '$_SERVER[PATH_INFO]         = '.((isset($_SERVER['PATH_INFO'])) ? @$_SERVER['PATH_INFO'] : $_SERVER['REQUEST_URI'] );
 		$DebugOutput[] = '$_SERVER[DOCUMENT_ROOT]     = '.@$_SERVER['DOCUMENT_ROOT'];
 		$DebugOutput[] = 'getenv(DOCUMENT_ROOT)       = '.@getenv('DOCUMENT_ROOT');
 		$DebugOutput[] = '';

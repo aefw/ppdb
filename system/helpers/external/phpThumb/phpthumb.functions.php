@@ -721,7 +721,7 @@ class phpthumb_functions {
 		$queries = explode($queryseperator, (string)$parsed_url['query']);
 		$CleanQueries = array();
 		foreach ($queries as $key => $query) {
-			@list($param, $value) = explode('=', $query);
+			$value = ''; if (strpos($query, '=') !== false) @list($param, $value) = explode('=', $query); else @list($param) = explode('=', $query);
 			$CleanQueries[] = strtr($param, $TranslationMatrix).($value ? '='.strtr($value, $TranslationMatrix) : '');
 		}
 		foreach ($CleanQueries as $key => $value) {
