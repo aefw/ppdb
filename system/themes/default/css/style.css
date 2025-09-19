@@ -22,6 +22,31 @@
     right: 15px;
 }
 
+/* BEGIN Navbar Injection */
+/* Navbar ini jangan diutak-atik, karena berpengaruh pada layout dropdown cursor */
+.tm-navbar-right .tm-navbar-item-,
+.uk-navbar-right .uk-navbar-item- {
+    font-weight: bold;
+    height: 70px;
+    color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    min-height: 80px;
+    padding: 0 15px;
+    font-size: 14px;
+    font-family: ProximaNova, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    text-decoration: none;
+    column-gap: .25em;
+}
+.tm-navbar-right > a.uk-navbar-toggle,
+.uk-navbar-right > a.uk-navbar-toggle,
+.tm-navbar-right > div > a.uk-navbar-toggle,
+.uk-navbar-right > div > a.uk-navbar-toggle
+{ position: absolute; top: 0; right: 0; }
+/* END Navbar Injection */
+
 .tm-navbar-container .uk-navbar-nav li a span[uk-icon] { margin-right: 6px; }
 .tm-navbar-container .uk-navbar-dropdown { background: linear-gradient(to left, #28a5f5, #1e87f0); }
 .tm-footer { background: #000; padding: 16px; color: #fff; }
