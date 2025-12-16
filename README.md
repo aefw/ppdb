@@ -47,6 +47,10 @@ AEframework membutuhkan PHP **versi 8.1 atau lebih tinggi**, dengan ekstensi ber
 - `xml` (aktif secara default — **jangan dimatikan**)
 - [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) _(untuk dukungan MySQL native)_
 
+## ⛁ Database Requirements
+
+AEframework membutuhkan MariaDB **versi 10.3 atau lebih tinggi**, atau MySQL **versi 8.0.29 atau lebih tinggi**
+
 ## 📦 Upload & Produksi
 
 - Folder `upload/` dan `backup/` harus writable (`chmod 755` atau `775`)
