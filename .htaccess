@@ -1,6 +1,6 @@
 <IfModule mod_rewrite.c>
 	RewriteEngine On
-	RewriteBase /aefw3/
+	RewriteBase /
 
 #.rewrite.htaccess
 #.own.rewrite.htaccess
