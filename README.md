@@ -49,7 +49,7 @@ AEframework membutuhkan PHP **versi 8.1 atau lebih tinggi**, dengan ekstensi ber
 
 ## ⛁ Database Requirements
 
-AEframework membutuhkan MariaDB **versi 10.3 atau lebih tinggi**, atau MySQL **versi 8.0.29 atau lebih tinggi**
+AEframework membutuhkan MariaDB **versi 10.5 atau lebih tinggi**, karena sudah mendukung CI/CD maupun SQL idempotent
 
 ## 📦 Upload & Produksi
 
