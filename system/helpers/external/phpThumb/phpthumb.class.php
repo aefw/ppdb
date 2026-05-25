@@ -198,8 +198,8 @@ class phpthumb {
 	public $config_allow_src_above_phpthumb             = true;
 	public $config_auto_allow_symlinks                  = true;    // allow symlink target directories without explicitly whitelisting them
 	public $config_additional_allowed_dirs              = array(); // additional directories to allow source images to be read from
-	public $config_file_create_mask                     = 0755;
-	public $config_dir_create_mask                      = 0755;
+	public $config_file_create_mask                     = 0775;
+	public $config_dir_create_mask                      = 0775;
 
 	// * HTTP fopen
 	public $config_http_fopen_timeout                   = 10;

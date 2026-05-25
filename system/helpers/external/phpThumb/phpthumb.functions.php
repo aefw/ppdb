@@ -847,7 +847,7 @@ class phpthumb_functions {
 		return false;
 	}
 
-	public static function EnsureDirectoryExists($dirname, $mask=0755) {
+	public static function EnsureDirectoryExists($dirname, $mask=0775) {
 		// https://www.php.net/manual/en/ini.core.php#ini.open-basedir says:
 		// "Under Windows, separate the directories with a semicolon. On all other systems, separate the directories with a colon."
 		$config_open_basedir = ini_get('open_basedir');

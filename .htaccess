@@ -1,26 +1,24 @@
 RewriteEngine On
 RewriteBase /
 
-# BEGIN Security
-
-# Block direct access to sensitive folders other than static
-RewriteCond %{REQUEST_URI} \.(ico|gif|jpe?g|png|webp|avif|bmp|tiff?|jfif|svgz?|eot|ttf|ttc|otf|woff2?|css|js|xml|json|mp4|webm|ogg|mp3|wav|zip|gz)$ [NC]
-RewriteCond %{REQUEST_URI} ^/(system|app|root|vendor|storage)/ [NC]
-RewriteRule .* - [L]
-
 RewriteRule (^|/)\.(env|git|svn|htaccess|ini|log|sh|bak|sql)$ - [F,L]
 RewriteRule (composer\.(json|lock)|package\.json|yarn\.lock|Dockerfile|docker-compose\.yml)$ - [F,L]
 RewriteRule (license\.sn|environment|\.conf)$ - [F,L]
 
-# END Security
+RewriteRule ^(upload|uploads)/.*\.(php[0-9]?|phtml|phar|phps|shtml|cgi|pl|py)$ - [F,L]
 
-# Block WordPress probing
-RewriteRule ^(wp-admin|wp-login|xmlrpc\.php|wp-content|wp-includes) - [F,L]
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteCond %{REQUEST_FILENAME} !index\.php$
+RewriteRule \.php$ - [F,L]
 
-# Set ENV untuk static files
+RewriteRule ^(wp-admin|wp-login\.php|xmlrpc\.php|wp-content|wp-includes) - [F,L]
+
+RewriteCond %{REQUEST_URI} \.(ico|gif|jpe?g|png|webp|avif|bmp|tiff?|jfif|svgz?|eot|ttf|ttc|otf|woff2?|css|js|xml|json|mp4|webm|ogg|mp3|wav|zip|gz)$ [NC]
+RewriteCond %{REQUEST_URI} ^/(application|app|system|root|vendor|storage)/ [NC]
+RewriteRule .* - [L]
+
 RewriteRule \.(ico|gif|jpe?g|png|webp|avif|bmp|tiff?|jfif|svgz?|eot|ttf|ttc|otf|woff2?|css|js|xml|json|mp4|webm|ogg|mp3|wav|zip|gz)$ - [E=IS_STATIC:1]
 
-# BLOCK COMMON ATTACK PATTERNS
 RewriteCond %{QUERY_STRING} (\.\./|\.\.\\|%3C|%3E|<script|</script>|javascript:|\bunion\b|\bselect\b|\binsert\b|\bdrop\b|\bsleep\b|\bbenchmark\b) [NC]
 RewriteRule .* - [F,L]
 
@@ -36,12 +34,30 @@ Options -Indexes
 ErrorDocument 403 /index.php?403
 ErrorDocument 404 /index.php?404
 
+<FilesMatch "\.(php[0-9]?|phtml|phar|phps)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order Allow,Deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+<Files "index.php">
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order Allow,Deny
+        Allow from all
+    </IfModule>
+</Files>
+
 # BEGIN Cache-Control dan Expires Header
 <IfModule mod_headers.c>
-    # Apply hanya ke static assets
     Header set Cache-Control "public, max-age=2592000, immutable" env=IS_STATIC
     Header set Access-Control-Allow-Origin "*" env=IS_STATIC
-	Header append Vary: Accept-Encoding env=IS_STATIC
+    Header append Vary: Accept-Encoding env=IS_STATIC
 </IfModule>
 # END Cache-Control dan Expires Header
 
@@ -54,7 +70,6 @@ AddType application/vnd.ms-fontobject .eot
 AddType image/svg+xml .svg .svgz
 AddEncoding gzip .svgz
 
-# Apache only
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css
     AddOutputFilterByType DEFLATE application/xml application/xhtml+xml application/rss+xml
@@ -62,7 +77,6 @@ AddEncoding gzip .svgz
     AddOutputFilterByType DEFLATE application/json
     AddOutputFilterByType DEFLATE font/ttf font/otf font/woff font/woff2
     AddOutputFilterByType DEFLATE image/svg+xml
-    # Bug workaround for old browsers
     BrowserMatch ^Mozilla/4 gzip-only-text/html
     BrowserMatch ^Mozilla/4\.0[678] no-gzip
     BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
