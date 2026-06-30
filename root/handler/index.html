@@ -235,7 +235,10 @@
                 </div>
 				<div class="handler-page-title rainbow">{title}</div>
 				<div class="handler-page-content">{content}</div>
-				<div class="handler-page-link"><a href="<?php echo str_replace('\\', '/', dirname($_SERVER['PHP_SELF'])); ?>">Back to Homepage</a></div>
+				<div class="handler-page-link">
+          <a href="{base_url}">Back to Homepage</a>
+          <a href="javascript:history.back();">Back to Previous</a>
+        </div>
 			</div>
 		</div>
 	</body>
