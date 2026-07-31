@@ -1,0 +1,240 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+/**
+ * Perubahan pada file ini maka diperlukan penyesuaian juga dengan file yg seirama dengan ini
+ * file yg seirama dengan file ini adalah:
+ * /app/modules/finance/libraries/api_xendit*
+ * ppdb/app/modules/finance/libraries/api_xendit*
+ * sia/app/modules/sch_fa_siswa/libraries/api_xendit*
+ * siska/app/modules/sch_fa_siswa/libraries/api_xendit*
+ */
+
+if( ! function_exists('api_xenditlib_getPaymentAvailable_logo') ) {
+	function api_xenditlib_getPaymentAvailable_logo($code) {
+		static $return;
+		if( isset($return[$code]) ) return $return[$code];
+
+		$AE = &get_instance();
+		$obj = $AE -> vars -> get('api_xenditlib_getPaymentAvailable');
+
+		$return[$code] = null;
+		if(
+			( isset($obj->status) && $obj->status == true && $obj->code == 200 )
+			||
+			( isset($obj['status']) && $obj['status'] == true && $obj['code'] == 200 )
+		) {
+			$Datas = (isset($obj->data)) ? $obj->data : $obj['data'];
+			$Datas = json_encode($Datas);
+			$Datas = json_decode($Datas, true);
+			foreach($Datas as $key=>$value) {
+				if( isset($value['channels']) && is_array($value['channels']) ) {
+					foreach($value['channels'] as $k=>$val) {
+						$return[ $val['name'] ] = $val['icon'];
+					}
+				}
+			}
+		}
+		return (isset($return[$code])) ? $return[$code] : null;
+	}
+}
+
+class api_xenditlib {
+
+	var $AE = null;
+	var $curl = null;
+    var $host = null;
+    public static $id_user       = '3';
+    public static $token         = '';
+	public static $callbackToken = NULL;
+
+	function __construct() {
+		$this -> AE = &get_instance();
+
+        if( preg_match('/(dev([\d\.]+)?(-)?([\w]+)?\.|(demo|sandbox)\.)/i', index_page()) ) {
+            $this -> host = 'https://dev-api.indonetsoft.com';
+			self::$token  = 'e46a6ab5397d9736abe86dc6c0c6b94e003f2469';
+        } else {
+            $this -> host = 'https://api.indonetsoft.com';
+			self::$token  = 'c0e19c577cc077df42994e9b985290faabf3c1b2';
+        }
+		self::$callbackToken = hash('sha256', self::$token);
+
+		if( ! isset($this -> AE -> curl) )
+			$this -> AE -> load -> libraries('curl');
+		$this -> curl = new curl();
+		$this -> curl -> set_httpheader('aefw-users', self::$id_user);
+		$this -> curl -> set_httpheader('aefw-token', self::$token);
+	}
+
+	function isCallback() {
+		return (isset($_SERVER['HTTP_X_CALLBACK_TOKEN']) && $_SERVER['HTTP_X_CALLBACK_TOKEN']==self::$callbackToken) ? true : false;
+		return false;
+	}
+
+	function accounts($data = NULL) {
+        $url = $this -> host . '/xendit/api/account';
+		if( is_array($data) ) {
+			$files = false;
+			if( isset($data['files']) && $data['files'] ) {
+				$files = $data['files'];
+				unset($data['files']);
+			}
+			if( $files ) {
+				$content = $this -> curl -> post_upload($url, $data, $files);
+			} else {
+				$content = $this -> curl -> post($url, $data);
+			}
+		} elseif( is_string($data) ) {
+			$id = $data;
+			$url .= '/'.urlencode($id);
+			$content = $this -> curl -> get($url);
+		}
+		try {
+			$obj = json_decode($content);
+			return $obj;
+		}catch(Exception $e){
+			return $content;
+		}
+	}
+
+	function getBalance($forUserId = NULL) {
+        $url = $this -> host . '/xendit/api/balance/' . urlencode($forUserId);
+		$content = $this -> curl -> get($url);
+		try {
+			$obj = json_decode($content);
+			return $obj;
+		}catch(Exception $e){
+			return $content;
+		}
+	}
+
+	function getPaymentAvailable($forUserId = NULL) {
+        $url = $this -> host . '/xendit/api/getPaymentAvailable/' . urlencode($forUserId);
+		$content = $this -> curl -> get($url);
+		try {
+			$obj = json_decode($content);
+			if( isset($obj->status) && $obj->status == true && $obj->code == 200 ) {
+				$this -> AE -> vars -> set('api_xenditlib_getPaymentAvailable', $obj);
+			}
+			return $obj;
+		}catch(Exception $e){
+			return $content;
+		}
+	}
+
+	function getPaymentFee($data = array(), $forUserId = NULL) {
+        $url = $this -> host . '/xendit/api/getPaymentFee/' . urlencode($forUserId);
+		$content = $this -> curl -> post($url, $data);
+		try {
+//var_dump($content);
+			$obj = json_decode($content);
+			return $obj;
+		}catch(Exception $e){
+			return $content;
+		}
+	}
+
+	function getDisbursementFee($forUserId = NULL) {
+        $url = $this -> host . '/xendit/api/getDisbursementFee/' . urlencode($forUserId);
+		$content = $this -> curl -> get($url);
+		try {
+//var_dump($content);
+			$obj = json_decode($content);
+			return $obj;
+		}catch(Exception $e){
+			return $content;
+		}
+	}
+
+	function disbursement($id = NULL) {
+		if( is_string($id) ) {
+			$url = $this -> host . '/xendit/api/disbursement/' . urlencode($id);
+			$content = $this -> curl -> get($url);
+			try {
+				$obj = json_decode($content);
+				if( ! isset($obj->status) ) return $content;
+				return $obj;
+			}catch(Exception $e){
+				return $content;
+			}
+		} elseif( is_array($id) ) {
+			$data = $id;
+			$url = $this -> host . '/xendit/api/disbursement';
+			$content = $this -> curl -> post($url, $data);
+			try {
+				$obj = json_decode($content);
+				if( ! isset($obj->status) ) return $content;
+				return $obj;
+			}catch(Exception $e){
+				return $content;
+			}
+		}
+	}
+
+
+
+
+	function invoices($id = NULL) {
+		if( is_string($id) ) {
+			$url = $this -> host . '/xendit/api/invoice/' . urlencode($id);
+			$content = $this -> curl -> get($url);
+			try {
+				$obj = json_decode($content);
+				if( ! isset($obj->status) ) return $content;
+				return $obj;
+			}catch(Exception $e){
+				return $content;
+			}
+		} elseif( is_array($id) ) {
+			$data = $id;
+			$url = $this -> host . '/xendit/api/invoice';
+			$content = $this -> curl -> post($url, $data);
+			try {
+//echo $content;
+				$obj = json_decode($content);
+				if( ! isset($obj->status) ) return $content;
+				return $obj;
+			}catch(Exception $e){
+				return $content;
+			}
+		}
+	}
+
+
+
+	function recallback_invoice($trxid, $id) {
+		$url = $this -> host . '/xendit/api/recallback_invoice/' . urlencode($trxid) . '/' . urlencode($id);
+		$content = $this -> curl -> get($url);
+		try {
+			$obj = json_decode($content);
+			if( ! isset($obj->status) ) return $content;
+			return $obj;
+		}catch(Exception $e){
+			return $content;
+		}
+	}
+
+
+
+
+
+
+
+/*
+	function getPaymentChannels($forUserId = NULL) {
+		$url  = $this -> base_url();
+		$url .= '/payment_channels';
+		if( $forUserId != NULL ) {
+			$this -> curl -> set_httpheader('for-user-id', $forUserId);
+		} else {
+		}
+		$content = $this -> curl -> get($url);
+		try {
+			$obj = json_decode($content);
+			return $content;
+		}catch(Exception $e){
+		}
+	}
+/** */
+}
